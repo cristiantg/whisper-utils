@@ -5,7 +5,8 @@
 @requires Python3 + Virtual environment
 
 
-# 1. SETUP
+# 1. Setup
+Please, first check which folder on Ponyland has enough space (more than 20GB) and create a folder there. In my case, I use: /vol/tensusers5/ctejedor/. Obviously, you need to choose your own folder :)
 
 ```
 # Run the following commands once:
@@ -22,7 +23,7 @@ pip3 install git+https://github.com/linto-ai/whisper-timestamped
 pip3 install matplotlib
 ```
 
-# 2. EXECUTION
+# 2. Execution
 
 ```
 # Let op: The models are downloaded and saved in cache_model_folder (from 1GB to 20GB)!
@@ -33,9 +34,21 @@ cd /vol/tensusers5/ctejedor/whisper && source venv/bin/activate && clear && pwd
 python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code output_folder cache_model_folder prompts_folder[0 for none]
 ```
 
+- *input_folder*: folder with audio files.
+- *whisper_model*: tiny, small, medium, large… (choose one).
+- *lang_code*: en, nl, etc. (see Whisper models).
+- *output_folder*: folder for the Whisper output (.txt and .json files will be generated here).
+- *cache_model_folder*: folder in which the Whisper models will be downloaded and stored.
+- *prompts_folder*: folder with the prompts of the audio files. By default, .prompt files with the same name as in the audio_folder. Write 0 if you do not want to set this value.
+
+
 ```
 # Examples Python
+
+python3 decode_whispertimestamped_folder.py audio/en tiny en output/en models 0
+
 python3 decode_whispertimestamped_folder.py audio/en tiny en output/en models prompts/en
+
 nohup time python3 decode_whispertimestamped_folder.py audio/en tiny en output/en models 0 &
 ```
 ```
@@ -44,7 +57,7 @@ whisper "audio/snf025_nikolateslawirelessvision_anonymous_gu.mp3" --model tiny -
 ```
 
 
-# 3. EXTRA
+# 3. Extra
 
 ```
 # List of Ponies with free GPUs
