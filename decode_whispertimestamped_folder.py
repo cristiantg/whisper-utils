@@ -6,15 +6,15 @@
 # ssh mistmane
 # nvidia-smi (see if at least one GPU is at 0% capacity, if not change to another Pony with GPUs)
 # cd /vol/tensusers5/ctejedor/whisper && source venv/bin/activate
-# python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code output_folder cache_model_folder prompts_folder[0 for none]
+# python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code[0 for autom. detection] output_folder cache_model_folder prompts_folder[0 for none]
 # 
 # Note: each pair of audio-prompt files must have the same name (different extension) in each corresponding folder (by default .prompt for the prompts extension)
 # Note: if the transcription is found in the output folder before the decoding, the file will be skipped.
 # @since 2023/02/07
 
 # Examples:
+# python3 decode_whispertimestamped_folder.py audio/examples tiny 0 output/nl /vol/tensusers5/ctejedor/whisper/models 0
 # nohup time python3 decode_whispertimestamped_folder.py audio/en tiny en output/en /vol/tensusers5/ctejedor/whisper/models 0 &
-# python3 decode_whispertimestamped_folder.py audio/examples tiny nl output/nl /vol/tensusers5/ctejedor/whisper/models 0
 # nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers5/ctejedor/whisper/audio/dart-long large-v2 nl output/dart-long /vol/tensusers5/ctejedor/whisper/models 0 &
 # nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input large-v2 nl output/dart-whisper-prompts /vol/tensusers5/ctejedor/whisper/models /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input_prompts &
 
@@ -28,15 +28,18 @@ MODEL_LANG=sys.argv[3]
 OUTPUT_DIR=sys.argv[4]
 STORE_MODEL=sys.argv[5]
 PROMPTS_FOLDER=sys.argv[6]
-check_initial_prompt=False if PROMPTS_FOLDER=='0' else True
 PROMPT_EXTENSION='.prompt'
+
+NO_PARAM='0'
+check_initial_prompt=False if PROMPTS_FOLDER==NO_PARAM else True
+MODEL_LANG = None if MODEL_LANG == NO_PARAM else MODEL_LANG
 
 
 import os
 from os.path import isfile, join
 
 import json
-print("Loading Whisper timestamped...",end='')
+print("Loading Whisper timestamped... ",end='')
 import whisper_timestamped as whisper
 print('done')
 from pathlib import Path
@@ -60,17 +63,17 @@ for file in onlyfiles:
         if check_initial_prompt:
             with open(join(PROMPTS_FOLDER,filebase+PROMPT_EXTENSION)) as prompt_f:
                 try:
-                    result = whisper.transcribe(model, audio, language=MODEL_LANG, initial_prompt=prompt_f.read().strip())
+                    result = whisper.transcribe(model, audio, language = MODEL_LANG, initial_prompt=prompt_f.read().strip())
                 except:                    
                     try:
                         print("**-** Error --> ",str(counter), file, "trying again without prompt...")
-                        result = whisper.transcribe(model, audio, language=MODEL_LANG)
+                        result = whisper.transcribe(model, audio, language = MODEL_LANG)
                         print("**-** Fixed --> ",str(counter), file, " OK after trying without prompt...")
                     except:
                         print("**-** Error again --> ",str(counter), file, "skipping this file ...")
                         continue
         else:
-            result = whisper.transcribe(model, audio, language=MODEL_LANG)
+            result = whisper.transcribe(model, audio, language = MODEL_LANG)
 
         with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
             outfile.write(json.dumps(result, indent = 2, ensure_ascii = False))

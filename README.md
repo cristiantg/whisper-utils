@@ -36,7 +36,7 @@ python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code
 
 - *input_folder*: folder with audio files.
 - *whisper_model*: tiny, small, medium, large… (choose one).
-- *lang_code*: en, nl, etc. (see Whisper models).
+- *lang_code*: 0 for auto detection. You can also explicitally set the code: en, nl, etc. (see Whisper models).
 - *output_folder*: folder for the Whisper output (.txt and .json files will be generated here).
 - *cache_model_folder*: folder in which the Whisper models will be downloaded and stored.
 - *prompts_folder*: folder with the prompts of the audio files. By default, .prompt files with the same name as in the audio_folder. Write 0 if you do not want to set this value.
@@ -45,10 +45,13 @@ python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code
 ```
 # Examples Python
 
+python3 decode_whispertimestamped_folder.py audio/en tiny 0 output/en models 0
+
 python3 decode_whispertimestamped_folder.py audio/en tiny en output/en models 0
 
 python3 decode_whispertimestamped_folder.py audio/en tiny en output/en models prompts/en
 
+# Run in background:
 nohup time python3 decode_whispertimestamped_folder.py audio/en tiny en output/en models 0 &
 ```
 ```
