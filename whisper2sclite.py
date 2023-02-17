@@ -1,10 +1,11 @@
-# Prepares a hyp.txt file for SCLITE from a folder of files with the orthographical transcription in of the ASR decoding (in one line).
+# Prepares a ref/hyp file for SCLITE from a folder of files with the text 
+# transriptions (in one line).
 
 import os
 from os.path import isfile, join
 
-INPUT_DIR='/vol/tensusers5/ctejedor/whisper/output/beeldverhaal'
-OUTPUT_SCLITE_FILE='/vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_jasmin/Beeldverhaal/whisper/hyp.txt'
+INPUT_DIR='/vol/tensusers5/ctejedor/whisper/output/astla_bo_noprompts'
+OUTPUT_SCLITE_FILE='/vol/tensusers5/ctejedor/whisper/output/bo/hyp-no-prompts.txt'
 INPUT_EXTENSION=['txt']
 
 import re
