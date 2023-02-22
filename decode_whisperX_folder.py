@@ -74,21 +74,26 @@ for file in onlyfiles:
             result = model.transcribe(audio_file, language = MODEL_LANG)
 
 
-        # load alignment model and metadata
-        model_a, metadata = whisper.load_align_model(language_code=result["language"], device=device)    
-        # align whisper output
-        result_aligned = whisper.align(result["segments"], model_a, metadata, audio_file, device)
+        try:
+            # load alignment model and metadata
+            model_a, metadata = whisper.load_align_model(language_code=result["language"], device=device)
+            with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
+                outfile.write(json.dumps(result, indent = 2, ensure_ascii = False))
+            with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
+                outfile.write(result["text"])
+        except:
+            print("**-** Error load alignment model and metadata --> ",str(counter), file, " not possible to write results ...")
 
-        #["segments"]) # after alignment
-        #print(result_aligned["word_segments"]) # after alignment'
+        try:
+            # align whisper output
+            result_aligned = whisper.align(result["segments"], model_a, metadata, audio_file, device)
+            #["segments"]) # after alignment
+            #print(result_aligned["word_segments"]) # after alignment'
+            with open(join(OUTPUT_DIR,filebase+'_timestamps.json'), "w") as outfile:
+                outfile.write(json.dumps(result_aligned["word_segments"], indent = 2, ensure_ascii = False))
+        except:
+            print("**-** Error align whisper output --> ",str(counter), file, " not possible to write results ...")
 
-        
-        with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
-            outfile.write(json.dumps(result, indent = 2, ensure_ascii = False))
-        with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
-            outfile.write(result["text"])
-        with open(join(OUTPUT_DIR,filebase+'_timestamps.json'), "w") as outfile:
-            outfile.write(json.dumps(result_aligned["word_segments"], indent = 2, ensure_ascii = False))
         counter+=1
 
 print('Total files decoded', str(counter-1))
