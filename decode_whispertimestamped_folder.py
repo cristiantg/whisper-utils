@@ -72,14 +72,17 @@ for file in onlyfiles:
                         print("**-** Fixed --> ",str(counter), file, " OK after trying without prompt...")
                     except:
                         print("**-** Error again --> ",str(counter), file, "skipping this file ...")
-                        continue
+                        
         else:
-            result = whisper.transcribe(model, audio, language = MODEL_LANG)
-
+            try:
+                result = whisper.transcribe(model, audio, language = MODEL_LANG)
+            except:
+                print("**-** Error decoding --> ",str(counter), file, "skipping this file ...")
+                
         with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
             outfile.write(json.dumps(result, indent = 2, ensure_ascii = False))
         with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
-            outfile.write(result["text"])
+            outfile.write('' if type(result)==str else result["text"])
 
         counter+=1
 
