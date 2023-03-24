@@ -80,7 +80,7 @@ for file in onlyfiles:
                 print("**-** Error decoding --> ",str(counter), file, "skipping this file ...")
                 
         with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
-            outfile.write(json.dumps(result, indent = 2, ensure_ascii = False))
+            outfile.write('' if type(result)==str else json.dumps(result, indent = 2, ensure_ascii = False))
         with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
             outfile.write('' if type(result)==str else result["text"])
 

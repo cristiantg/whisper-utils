@@ -69,10 +69,12 @@ for file in onlyfiles:
                         print("**-** Fixed --> ",str(counter), file, " OK after trying without prompt...")
                     except:
                         print("**-** Error again --> ",str(counter), file, "skipping this file ...")
-                        continue
+                        
         else:
-            result = model.transcribe(audio_file, language = MODEL_LANG)
-
+            try:
+                result = model.transcribe(audio_file, language = MODEL_LANG)
+            except:
+                print("**-** Error decoding --> ",str(counter), file, "skipping this file ...")
 
         try:
             # load alignment model and metadata
