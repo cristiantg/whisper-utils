@@ -1,11 +1,17 @@
-# Prepares a hyp.txt file for SCLITE from a folder of files with the orthographical transcription in of the ASR decoding (in one line).
+# Prepares a ref/hyp file for SCLITE from a folder of files with the text 
+# transriptions (in one line).
 
 import os
 from os.path import isfile, join
 
-INPUT_DIR='/vol/tensusers5/ctejedor/whisper/output/beeldverhaal'
-OUTPUT_SCLITE_FILE='/vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_jasmin/Beeldverhaal/whisper/hyp.txt'
-INPUT_EXTENSION=['txt']
+
+import sys
+if len(sys.argv) != 4:
+    print(sys.argv[0] + "Please, specify 3 parameters: hyp-filepath ref-filepath")
+    # python3 whisper2sclite.py output/dart-whisper-vad wer-vad/hyp-vad-prompts.txt txt
+    sys.exit(2)
+[INPUT_DIR, OUTPUT_SCLITE_FILE, EXTENSION] = sys.argv[1:4]
+INPUT_EXTENSION=[EXTENSION]
 
 import re
 

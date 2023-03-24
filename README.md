@@ -16,14 +16,25 @@ current=/vol/tensusers5/ctejedor/whisper
 mkdir $current && cd $current
 python3 -m venv venv
 source venv/bin/activate
+
 pip3 install --upgrade pip
 pip3 install git+https://github.com/openai/whisper.git
 # check whether ffmpeg is installed or not and install it if necessary
 pip3 install git+https://github.com/linto-ai/whisper-timestamped
 pip3 install matplotlib
+pip install git+https://github.com/m-bain/whisperx.git
+cd $current
+git clone https://github.com/cristiantg/whisper-utils.git .
 ```
 
-# 2. Execution
+# 2. Update
+```
+pip install --upgrade --no-deps --force-reinstall git+https://github.com/linto-ai/whisper-timestamped
+pip install git+https://github.com/m-bain/whisperx.git --upgrade
+```
+
+
+# 3. Execution
 
 ```
 # Let op: The models are downloaded and saved in cache_model_folder (from 1GB to 20GB)!
@@ -31,7 +42,7 @@ ssh mistmane
 nvidia-smi # Optional, to check if at least one GPU is free, if not, change to another Pony
 cd /vol/tensusers5/ctejedor/whisper && source venv/bin/activate && clear && pwd
 
-python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code output_folder cache_model_folder prompts_folder[0 for none]
+python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code[0 for Auto] output_folder cache_model_folder prompts_folder[0 for none]
 ```
 
 - *input_folder*: folder with audio files.
@@ -57,10 +68,12 @@ nohup time python3 decode_whispertimestamped_folder.py audio/en tiny en output/e
 ```
 # Examples command line
 whisper "audio/snf025_nikolateslawirelessvision_anonymous_gu.mp3" --model tiny --model_dir /vol/tensusers5/ctejedor/whisper/models/ --output_dir output --language English
+
+whisper audio/p1/second.wav --model large --model_dir /vol/tensusers5/ctejedor/whisper/models/ --output_dir output/p1/ --language nl
 ```
 
 
-# 3. Extra
+# 4. Extra
 
 ```
 # List of Ponies with free GPUs
@@ -69,7 +82,7 @@ python /vol/tensusers/mbentum/AUDIOSERVER/repo/controller.py -show_available
 ```
 
 
-# 4. Models
+# 5. Models & languages
 
 ```
 # Q&A - Where can I see the list of models?
