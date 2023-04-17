@@ -29,6 +29,7 @@ git clone https://github.com/cristiantg/whisper-utils.git .
 
 # 2. Update
 ```
+cd /vol/tensusers5/ctejedor/whisper && source venv/bin/activate && clear && pwd
 pip install --upgrade --no-deps --force-reinstall git+https://github.com/linto-ai/whisper-timestamped
 pip install git+https://github.com/m-bain/whisperx.git --upgrade
 ```
