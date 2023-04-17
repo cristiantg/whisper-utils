@@ -78,12 +78,14 @@ for file in onlyfiles:
                 result = whisper.transcribe(model, audio, language = MODEL_LANG)
             except:
                 print("**-** Error decoding --> ",str(counter), file, "skipping this file ...")
-                
-        with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
-            outfile.write('' if type(result)==str else json.dumps(result, indent = 2, ensure_ascii = False))
-        with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
-            outfile.write('' if type(result)==str else result["text"])
 
+        try:   
+                with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
+                    outfile.write('' if type(result)==str else json.dumps(result, indent = 2, ensure_ascii = False))
+                with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
+                    outfile.write('' if type(result)==str else result["text"])
+        except:
+            print("**-** Error writing the model and metadata --> ",str(counter), file, " not possible to write results ...")
         counter+=1
 
 print('Total files decoded', str(counter-1))
