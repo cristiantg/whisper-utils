@@ -5,8 +5,14 @@
 @requires Python3 + Virtual environment
 
 
+[Whisper](https://github.com/openai/whisper) is an automatic speech recognition (ASR) system trained on 680,000 hours of multilingual and multitask supervised data collected from the web.
+Cristian has created a [[https://github.com/cristiantg/whisper-utils|github repository]] with the instructions to install and use Whisper on Ponyland with: 
+[Whisper-timestamped](https://github.com/linto-ai/whisper-timestamped) (timestamps, VAD at sentence-level and confidence scores at word-level) or 
+[WhisperX]([https://github.com/m-bain/whisperX|WhisperX) (timestamps, VAD at sentence&word-level, but without confidence scores yet).
+
+
 # 1. Setup
-Please, first check which folder on Ponyland has enough space (more than 20GB) and create a folder there. In my case, I use: /vol/tensusers5/ctejedor/. Obviously, you need to choose your own folder :)
+Please, first check which folder on Ponyland has enough space (more than 20GB) and create a folder there. In my case, I use: */vol/tensusers5/ctejedor/*. Obviously, **you need to choose your own folder** :)
 
 ```
 # Run the following commands once:
@@ -14,14 +20,18 @@ Please, first check which folder on Ponyland has enough space (more than 20GB) a
 ssh thunderlane
 current=/vol/tensusers5/ctejedor/whisper
 mkdir $current && cd $current
+df -h . # Check free space > 50GB. Otherwise, change the path to other location
 python3 -m venv venv
 source venv/bin/activate
 
 pip3 install --upgrade pip
+pip3 install triton
+pip3 install tiktoken -v
 pip3 install git+https://github.com/openai/whisper.git
 # check whether ffmpeg is installed or not and install it if necessary
 pip3 install git+https://github.com/linto-ai/whisper-timestamped
 pip3 install matplotlib
+pip install onnxruntime
 pip install git+https://github.com/m-bain/whisperx.git
 cd $current
 git clone https://github.com/cristiantg/whisper-utils.git .
@@ -30,6 +40,7 @@ git clone https://github.com/cristiantg/whisper-utils.git .
 # 2. Update
 ```
 cd /vol/tensusers5/ctejedor/whisper && source venv/bin/activate && clear && pwd
+pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
 pip install --upgrade --no-deps --force-reinstall git+https://github.com/linto-ai/whisper-timestamped
 pip install git+https://github.com/m-bain/whisperx.git --upgrade
 ```
@@ -38,12 +49,19 @@ pip install git+https://github.com/m-bain/whisperx.git --upgrade
 # 3. Execution
 
 ```
+# You will decode all files in a specific input_folder. The results will be obtained on an output_folder.
 # Let op: The models are downloaded and saved in cache_model_folder (from 1GB to 20GB)!
+# With nohup  ... & you can run the command in the background
+
 ssh mistmane
 nvidia-smi # Optional, to check if at least one GPU is free, if not, change to another Pony
 cd /vol/tensusers5/ctejedor/whisper && source venv/bin/activate && clear && pwd
 
-python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code[0 for Auto] output_folder cache_model_folder prompts_folder[0 for none]
+# Example for WhisperX
+nohup time python3 decode_whisperX_folder.py audio/en tiny en output/en /vol/tensusers5/ctejedor/whisper/models 0 &
+
+# Example for Whisper-timestamped
+nohup time python3 decode_whispertimestamped_folder.py ./kaldi_jasmin/Beeldverhaal/utterances large-v2 nl output/beeldverhaal /vol/tensusers5/ctejedor/whisper/models 0 &
 ```
 
 - *input_folder*: folder with audio files.
@@ -51,7 +69,7 @@ python3 decode_whispertimestamped_folder.py input_folder whisper_model lang_code
 - *lang_code*: 0 for auto detection. You can also explicitally set the code: en, nl, etc. (see Whisper models).
 - *output_folder*: folder for the Whisper output (.txt and .json files will be generated here).
 - *cache_model_folder*: folder in which the Whisper models will be downloaded and stored.
-- *prompts_folder*: folder with the prompts of the audio files. By default, .prompt files with the same name as in the audio_folder. Write 0 if you do not want to set this value.
+- *prompts_folder*: folder with the prompts of the audio files. By default, .prompt files with the same filename as in the audio_folder. Write 0 if you do not want to set this value.
 
 
 ```

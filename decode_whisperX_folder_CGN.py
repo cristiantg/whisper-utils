@@ -1,9 +1,10 @@
-# This script decodes an entire folder (CGN) of audio files using Whisper-X.
+# This script decodes an entire folder (CGN) on Ponyland of audio files using Whisper-X.
 # If the transcription is already on the output directory, the audio file it is not decoded.
 # WhisperX provides timestamps with VAD, while Whisper-timestamped provides argmax of the timestamps
 # 
 # Usage (on Ponyland):
 #
+# #First Run the commands on step # 1. Setup (just for the first time)
 # ssh mistmane
 # nvidia-smi (see if at least one GPU is at 0% capacity, if not change to another Pony with GPUs)
 # cd /vol/tensusers5/ctejedor/whisper && source venv/bin/activate
