@@ -39,7 +39,8 @@ from os.path import isfile, join
 
 import json
 print("Loading Whisper X... ",end='')
-import whisperx as whisper
+import whisperx
+import whisper 
 print('done')
 from pathlib import Path
 print("Downloading & loading model...",MODEL)
@@ -57,7 +58,7 @@ for file in onlyfiles:
     #This condition is optional, is to not repeat the decoding for files we already have the transcription in OUTPUT_DIR
     if not Path(join(OUTPUT_DIR,filebase+'.txt')).is_file() or not Path(join(OUTPUT_DIR,filebase+'.json')).is_file():
         print(str(counter), file)
-        audio_file = whisper.load_audio(join(MY_DIR,file))
+        audio_file = join(MY_DIR,file)
         result = ''
         if check_initial_prompt:
             with open(join(PROMPTS_FOLDER,filebase+PROMPT_EXTENSION)) as prompt_f:
@@ -77,9 +78,10 @@ for file in onlyfiles:
             except:
                 print("**-** Error decoding --> ",str(counter), file, "skipping this file ...")
 
+
         try:
             # load alignment model and metadata
-            model_a, metadata = whisper.load_align_model(language_code=result["language"], device=device)
+            model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
             with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
                 outfile.write(json.dumps(result, indent = 2, ensure_ascii = False))
             with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
@@ -89,7 +91,7 @@ for file in onlyfiles:
 
         try:
             # align whisper output
-            result_aligned = whisper.align(result["segments"], model_a, metadata, audio_file, device)
+            result_aligned = whisperx.align(result["segments"], model_a, metadata, audio_file, device)
             #["segments"]) # after alignment
             #print(result_aligned["word_segments"]) # after alignment'
             with open(join(OUTPUT_DIR,filebase+'_timestamps.json'), "w") as outfile:
