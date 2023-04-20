@@ -4,6 +4,7 @@
 # 
 # Usage (on Ponyland):
 #
+# #First Run the commands on step # 1. Setup (just for the first time)
 # ssh mistmane
 # nvidia-smi (see if at least one GPU is at 0% capacity, if not change to another Pony with GPUs)
 # cd /vol/tensusers5/ctejedor/whisper && source venv/bin/activate
