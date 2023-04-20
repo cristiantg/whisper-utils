@@ -5,10 +5,9 @@
 @requires Python3 + Virtual environment
 
 
-[Whisper](https://github.com/openai/whisper) is an automatic speech recognition (ASR) system trained on 680,000 hours of multilingual and multitask supervised data collected from the web.
-Cristian has created a [[https://github.com/cristiantg/whisper-utils|github repository]] with the instructions to install and use Whisper on Ponyland with: 
-[Whisper-timestamped](https://github.com/linto-ai/whisper-timestamped) (timestamps, VAD at sentence-level and confidence scores at word-level) or 
-[WhisperX]([https://github.com/m-bain/whisperX|WhisperX) (timestamps, VAD at sentence&word-level, but without confidence scores yet).
+[Whisper](https://github.com/openai/whisper/) is a multilingual automatic speech recognition (ASR) system trained on 680,000 hours of multilingual and multitask supervised data collected from the web.
+This repository contains the instructions to install and use Whisper on Ponyland with: 
+[Whisper-timestamped](https://github.com/linto-ai/whisper-timestampe/d) (timestamps, VAD at sentence-level and confidence scores at word-level) or [WhisperX](https://github.com/m-bain/whisperX/) (timestamps, VAD at sentence&word-level, but without confidence scores yet).
 
 
 # 1. Setup
