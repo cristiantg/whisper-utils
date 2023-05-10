@@ -23,6 +23,15 @@
 # nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_jasmin/Beeldverhaal/utterances large-v2 nl output/beeldverhaal /vol/tensusers5/ctejedor/whisper/models 0 &
 
 
+# Improves the general output, change to False if needed:
+do_VAD=True # No hallucinations
+do_detect_disfluencies=True # [*] when a disfluence is found
+do_precision=True # Better accuracy, higher latency
+m_pres={}
+if do_precision:
+    m_pres={'beam_size':5, 'best_of':5, 'temperature':(0.0, 0.2, 0.4, 0.6, 0.8, 1.0)}
+print('\n+++ INTERNAL PARAMETERS +++\n','do_VAD',do_VAD,'do_detect_disfluencies',do_detect_disfluencies,'do_precision',do_precision)
+
 import sys
 MY_DIR=sys.argv[1]
 MODEL=sys.argv[2]
@@ -31,12 +40,7 @@ OUTPUT_DIR=sys.argv[4]
 STORE_MODEL=sys.argv[5]
 PROMPTS_FOLDER=sys.argv[6]
 PROMPT_EXTENSION='.prompt'
-# Improves the general output:
-do_VAD=True
-do_detect_disfluencies=True
 
-# Not tested yet (2023/04/20). To run with the options that have the best chance to provide a good transcription, use the following options:
-# whisper.transcribe(..., beam_size=5, best_of=5, temperature=(0.0, 0.2, 0.4, 0.6, 0.8, 1.0)..)
 
 NO_PARAM='0'
 check_initial_prompt=False if PROMPTS_FOLDER==NO_PARAM else True
@@ -71,18 +75,18 @@ for file in onlyfiles:
         if check_initial_prompt:
             with open(join(PROMPTS_FOLDER,filebase+PROMPT_EXTENSION)) as prompt_f:
                 try:
-                    result = whisper.transcribe(model, audio, vad=do_VAD, detect_disfluencies=do_detect_disfluencies, language = MODEL_LANG, initial_prompt=prompt_f.read().strip())
+                    result = whisper.transcribe(model, audio, **m_pres, vad=do_VAD, detect_disfluencies=do_detect_disfluencies, language = MODEL_LANG, initial_prompt=prompt_f.read().strip())
                 except:                    
                     try:
                         print("**-** Error --> ",str(counter), file, "trying again without prompt...")
-                        result = whisper.transcribe(model, audio, vad=do_VAD, detect_disfluencies=do_detect_disfluencies, language = MODEL_LANG)
+                        result = whisper.transcribe(model, audio, **m_pres, vad=do_VAD, detect_disfluencies=do_detect_disfluencies, language = MODEL_LANG)
                         print("**-** Fixed --> ",str(counter), file, " OK after trying without prompt...")
                     except:
                         print("**-** Error again --> ",str(counter), file, "skipping this file ...")
                         
         else:
             try:
-                result = whisper.transcribe(model, audio, vad=do_VAD, detect_disfluencies=do_detect_disfluencies, language = MODEL_LANG)
+                result = whisper.transcribe(model, audio, **m_pres, vad=do_VAD, detect_disfluencies=do_detect_disfluencies, language = MODEL_LANG)
             except Exception as ex:
                 print("**-** Error decoding --> ",str(counter), file, "skipping this file ...")
                 print(ex)
