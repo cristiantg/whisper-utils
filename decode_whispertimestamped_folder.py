@@ -18,7 +18,7 @@
 # python3 decode_whispertimestamped_folder.py audio/examples tiny 0 output/nl /vol/tensusers5/ctejedor/whisper/models 0
 # nohup time python3 decode_whispertimestamped_folder.py audio/en tiny en output/en /vol/tensusers5/ctejedor/whisper/models 0 &
 # nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers5/ctejedor/whisper/audio/dart-long large-v2 nl output/dart-long /vol/tensusers5/ctejedor/whisper/models 0 &
-# nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input large-v2 nl output/dart-whisper-prompts /vol/tensusers5/ctejedor/whisper/models /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input_prompts &
+# nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input large nl output/dart-whisper-prompts-dis /vol/tensusers5/ctejedor/whisper/models /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input_prompts &
 
 # nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_jasmin/Beeldverhaal/utterances large-v2 nl output/beeldverhaal /vol/tensusers5/ctejedor/whisper/models 0 &
 
@@ -94,8 +94,9 @@ for file in onlyfiles:
         try:   
                 with open(join(OUTPUT_DIR,filebase+'.json'), "w") as outfile:
                     outfile.write('' if type(result)==str else json.dumps(result, indent = 2, ensure_ascii = False))
-                with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
-                    outfile.write('' if type(result)==str else result["text"])
+                # This does not include disfluences and other info, better use the json output and process the file
+                #with open(join(OUTPUT_DIR,filebase+'.txt'), "w") as outfile:
+                #    outfile.write('' if type(result)==str else result["text"])
         except:
             print("**-** Error writing the model and metadata --> ",str(counter), file, " not possible to write results ...")
         counter+=1
