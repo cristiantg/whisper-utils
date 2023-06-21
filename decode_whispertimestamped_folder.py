@@ -3,6 +3,7 @@
 # WhisperX provides timestamps with VAD, while Whisper-timestamped provides argmax of the timestamps
 # 
 # Usage (on Ponyland):
+# It is possible to run mutliple instances in different Ponies (not the same since teh GPU is exclusive)
 # 
 # #First Run the commands on step # 1. Setup (just for the first time)
 # ssh mistmane
@@ -16,11 +17,11 @@
 
 # Examples:
 # python3 decode_whispertimestamped_folder.py audio/examples tiny 0 output/nl /vol/tensusers5/ctejedor/whisper/models 0
-# nohup time python3 decode_whispertimestamped_folder.py audio/en tiny en output/en /vol/tensusers5/ctejedor/whisper/models 0 &
-# nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers5/ctejedor/whisper/audio/dart-long large-v2 nl output/dart-long /vol/tensusers5/ctejedor/whisper/models 0 &
-# nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input large nl output/dart-whisper-prompts-dis /vol/tensusers5/ctejedor/whisper/models /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input_prompts &
+# nohup time python3 decode_whispertimestamped_folder.py audio/en tiny en output/en /vol/tensusers5/ctejedor/whisper/models 0 >> out.out &
+# nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers5/ctejedor/whisper/audio/dart-long large-v2 nl output/dart-long /vol/tensusers5/ctejedor/whisper/models 0 >> out.out &
+# nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input large nl output/dart-whisper-prompts-dis /vol/tensusers5/ctejedor/whisper/models /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_egs_CGN/s5/astla_is/kaldi_nl_input_prompts >> out.out &
 
-# nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_jasmin/Beeldverhaal/utterances large-v2 nl output/beeldverhaal /vol/tensusers5/ctejedor/whisper/models 0 &
+# nohup time python3 decode_whispertimestamped_folder.py /vol/tensusers4/ctejedor/lanewcristianmachine/opt/kaldi/egs/kaldi_jasmin/Beeldverhaal/utterances large-v2 nl output/beeldverhaal /vol/tensusers5/ctejedor/whisper/models 0 >> out.out &
 
 
 # Improves the general output, change to False if needed:
@@ -66,7 +67,7 @@ if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 counter=1
 for file in onlyfiles:
-    filebase = file.split('.')[0]
+    filebase = os.path.basename(file).rsplit('.', maxsplit=1)[0]
     #This condition is optional, is to not repeat the decoding for files we already have the transcription in OUTPUT_DIR
     if not Path(join(OUTPUT_DIR,filebase+'.txt')).is_file() or not Path(join(OUTPUT_DIR,filebase+'.json')).is_file():
         print(str(counter), file)
