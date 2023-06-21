@@ -26,7 +26,7 @@ if not os.path.exists(OUTPUT_DIR):
 
 for file in onlyfiles:
     
-    file_segments=join(OUTPUT_DIR,file.split('.')[0]+'.srt')
+    file_segments=join(OUTPUT_DIR,os.(path.basename(file).rsplit('.', maxsplit=1)[0])+'.srt')
     print(file, file_segments)
     model.language=sys.argv[3]
     result = model.transcribe(join(MY_DIR,file),language=model.language)

@@ -60,7 +60,7 @@ if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 counter=1
 for file in onlyfiles:
-    filebase = os.path.basename(file).split('.')[0]
+    filebase = os.path.basename(file).rsplit('.', maxsplit=1)[0]
     #This condition is optional, is to not repeat the decoding for files we already have the transcription in OUTPUT_DIR
     if not Path(join(OUTPUT_DIR,filebase+'.txt')).is_file() or not Path(join(OUTPUT_DIR,filebase+'.json')).is_file():
         print(str(counter), file)
