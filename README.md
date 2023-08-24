@@ -24,14 +24,8 @@ python3 -m venv venv
 source venv/bin/activate
 
 pip3 install --upgrade pip
-pip3 install triton
-pip3 install tiktoken -v
-pip3 install git+https://github.com/openai/whisper.git
-# check whether ffmpeg is installed or not and install it if necessary
-pip3 install git+https://github.com/linto-ai/whisper-timestamped
-pip3 install matplotlib
-pip install onnxruntime
-pip install git+https://github.com/m-bain/whisperx.git
+# check whether ffmpeg is installed or not and install it if necessary with: pip3 install ffmpeg
+pip3 install triton matplotlib onnxruntime tiktoken git+https://github.com/openai/whisper.git git+https://github.com/linto-ai/whisper-timestamped git+https://github.com/m-bain/whisperx.git -v
 cd $current
 git clone https://github.com/cristiantg/whisper-utils.git .
 ```
